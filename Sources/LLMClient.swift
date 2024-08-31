@@ -29,7 +29,7 @@ struct LLMClient {
     let systemPrompt = """
     You are a Git commit message generator. Your task is to create concise, informative commit messages based on git diffs. Follow these rules:
     1. Summarize the main changes in 5-10 words.
-    2. Start with an appropriate emoji.
+    2. Start with one appropriate emoji, in unicode.
     3. Use present tense (e.g., "Add", not "Added").
     4. Be specific but concise.
     5. Focus on the "what" and "why", not the "how".
@@ -43,7 +43,7 @@ struct LLMClient {
       print("Diffs may be too long. Model may lose context.")
     }
 
-    let options = OKCompletionOptions(numCtx: 128_000, temperature: 0.5, numPredict: 64)
+    let options = OKCompletionOptions(numCtx: 128_000, temperature: 0.7, numPredict: 64)
 
     var request = OKGenerateRequestData(model: modelName, prompt: diffs)
     request.options = options
