@@ -2,6 +2,7 @@
 // https://docs.swift.org/swift-book
 
 import ArgumentParser
+import Foundation
 
 @main
 struct AICommit: AsyncParsableCommand {
@@ -13,5 +14,11 @@ struct AICommit: AsyncParsableCommand {
     let message = await ai.generate(diffs: diffs)
     print("Generated commit message:")
     print(message)
+    print("[y] to approve, any other key to dismiss.")
+    
+    let res = waitForChar(character: "y")
+    if !res { return }
+    print("Commiting...")
+    _ = gitCommit(withMessage: message)
   }
 }
