@@ -1,6 +1,6 @@
 # ai-commit
 
-![Screenshot](assets/ai-commit-demo-image.svg)
+![Screenshot](assets/ai-commit-demo-image.png)
 
 <a href="https://threads.net/intent/post?text=Use%20AI%20to%20generate%20commit%20messages%20with%20this%20privacy-focused%2C%20local-first%20tool!&url=https%3A%2F%2Fgithub.com%2Fjtpotato%2Fai-commit">
    <p align="center">
