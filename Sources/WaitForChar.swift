@@ -32,7 +32,6 @@ func waitForChar(character: String) -> Bool {
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt)
   }
 
-  print("Press '\(character)' to approve, otherwise exit... ", terminator: "")
   let res = getchar()
   if res == Int32(character.utf8.first!) { // Compare with the ASCII value of the character
     return true
