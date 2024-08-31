@@ -18,7 +18,7 @@ struct AICommit: AsyncParsableCommand {
     }
     
     let diffs = getGitDiffs()
-    print(diffs)
+//    print(diffs)
     print("Diffs collected, waiting for model response")
 //    print(diffs)
     let message = await ai.generate(diffs: diffs)
