@@ -26,15 +26,19 @@ struct LLMClient {
 
   func generate(diffs: String) async -> String {
 //    print(diffs.count)
-    var prompt = "Generate an appropriate git commit message using the following diffs, describing what the commit does. Be specific. Keep responses under 100 characters. Only use one emoji in the commit message, at the beginning. Do not output other text other than the commit message. Do not return an empty commit message.\n\n```"
-    prompt += diffs
-    prompt += "\n```"
-    let request = OKGenerateRequestData(model: modelName, prompt: prompt)
+    let prompt = "You will be given a git diff. Write a concise git commit message. Output *only* this commit message. Git commit messages are less than 20 words. Never output a blank message. Always include an emoji in the front of the message.\n\n"
+
+    let options = OKCompletionOptions(numCtx: 32_000, numPredict: 64)
+
+    print(prompt + diffs)
+
+    var request = OKGenerateRequestData(model: modelName, prompt: prompt + diffs)
+    request.options = options
 
     var responseString = ""
     do {
       for try await response in ollama.generate(data: request) {
-//        print("[DEBUG]", response.response)
+        print(response.response, terminator: "")
         responseString += response.response
       }
     } catch {
