@@ -26,14 +26,23 @@ struct LLMClient {
 
   func generate(diffs: String) async -> String {
 //    print(diffs.count)
-    let prompt = "You will be given a git diff. Write a concise git commit message. Output *only* this commit message. Git commit messages are less than 20 words. Never output a blank message. Always include an emoji in the front of the message.\n\n"
+    let systemPrompt = """
+    You are a Git commit message generator. Your task is to create concise, informative commit messages based on git diffs. Follow these rules:
+    1. Summarize the main changes in 5-10 words.
+    2. Start with an appropriate emoji.
+    3. Use present tense (e.g., "Add", not "Added").
+    4. Be specific but concise.
+    5. Focus on the "what" and "why", not the "how".
+    6. Mention affected components or files if relevant.
+    7. Never output a blank message.
+    8. Provide only the commit message, nothing else.
+    """
 
-    let options = OKCompletionOptions(numCtx: 32_000, numPredict: 64)
+    let options = OKCompletionOptions(numCtx: 128_000, temperature: 0.5, numPredict: 64)
 
-    print(prompt + diffs)
-
-    var request = OKGenerateRequestData(model: modelName, prompt: prompt + diffs)
+    var request = OKGenerateRequestData(model: modelName, prompt: diffs)
     request.options = options
+    request.system = systemPrompt
 
     var responseString = ""
     do {
@@ -44,6 +53,8 @@ struct LLMClient {
     } catch {
       print("\(error.localizedDescription)")
     }
+
+    print("")
 
     return responseString
   }
