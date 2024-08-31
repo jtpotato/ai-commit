@@ -7,7 +7,7 @@ import Foundation
 @main
 struct AICommit: AsyncParsableCommand {
   mutating func run() async throws {
-    guard let ai = await LLMClient() else { print("Couldn't connect to ollama"); return }
+    guard let ai = await LLMClient() else { print("Couldn't connect to Ollama"); return }
     let diffs = getGitDiffs()
     print("Diffs collected, waiting for model response")
 //    print(diffs)
@@ -18,7 +18,7 @@ struct AICommit: AsyncParsableCommand {
     
     let res = waitForChar(character: "y")
     if !res { return }
-    print("Commiting...")
+    print("Committing...\n")
     _ = gitCommit(withMessage: message)
   }
 }
