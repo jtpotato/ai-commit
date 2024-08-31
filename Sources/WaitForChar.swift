@@ -36,7 +36,6 @@ func waitForChar(character: String) -> Bool {
   if res == Int32(character.utf8.first!) { // Compare with the ASCII value of the character
     return true
   } else {
-    print("Exiting...")
     return false
   }
 }

@@ -13,6 +13,8 @@ struct AICommit: AsyncParsableCommand {
     print("Press `y` to approve, or anything else to skip... ", terminator: "")
     if waitForChar(character: "y") {
       gitStage()
+    } else {
+      print("Skipping...")
     }
     
     let diffs = getGitDiffs()
@@ -23,13 +25,13 @@ struct AICommit: AsyncParsableCommand {
     print(message)
     
     print("Press `y` to approve, or anything else to exit... ", terminator: "")
-    if !waitForChar(character: "y") { return }
+    if !waitForChar(character: "y") { print("Exiting..."); return }
     print("Committing...\n")
     _ = gitCommit(withMessage: message)
     
     print("🚀  Run `git push`?")
     print("Press `y` to approve, or anything else to exit... ", terminator: "")
-    if !waitForChar(character: "y") { return }
+    if !waitForChar(character: "y") { print("Exiting..."); return }
     print("Pushing...\n")
     gitPush()
   }

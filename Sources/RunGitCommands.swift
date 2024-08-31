@@ -39,9 +39,9 @@ func runGitCommand(arguments: [String]) -> (output: String, error: String, succe
 func gitCommit(withMessage message: String) -> Bool {
     let result = runGitCommand(arguments: ["commit", "-m", message])
     if result.success {
-        print("Commit successful: \(result.output)")
+        print("Commit successful. \(result.output)")
     } else {
-        print("Commit failed: \(result.error)")
+        print("Commit failed. \(result.error)")
     }
     return result.success
 }
@@ -50,9 +50,9 @@ func gitCommit(withMessage message: String) -> Bool {
 func gitPush() {
     let result = runGitCommand(arguments: ["push"])
     if result.success {
-        print("Push successful: \(result.output)")
+        print("Push successful. \(result.output)")
     } else {
-        print("Push failed: \(result.error)")
+        print("Push failed. \(result.error)")
     }
 }
 
@@ -62,6 +62,6 @@ func gitStage() {
     if result.success {
         print("All changes staged successfully.")
     } else {
-        print("Staging failed: \(result.error)")
+        print("Staging failed. \(result.error)")
     }
 }
