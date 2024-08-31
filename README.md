@@ -4,6 +4,8 @@ Here’s a revised README that enhances clarity, structure, and professionalism 
 
 # ai-commit
 
+![Screenshot](assets/ai-commit-demo-image.svg)
+
 **ai-commit** is a command-line interface (CLI) tool that generates AI-assisted Git commit messages. Written in Swift based on the assumption that most Ollama users are going to have a Mac.
 
 ## Features
