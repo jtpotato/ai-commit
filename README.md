@@ -67,6 +67,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-Feel free to modify any sections to better suit your project’s style or add any additional information that you think might be relevant!
-
 README mostly generated with ChatGPT.
