@@ -13,6 +13,7 @@ import Foundation
 func waitForChar(character: String) -> Bool {
   let char = Character(character)
   let res = getchar()
+  print("[DEBUG]", res)
   if res == Int32(char.asciiValue!) {
     return true
   }
