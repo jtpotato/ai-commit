@@ -7,15 +7,16 @@ That is all.
 Uses ollama to generate commits because why would you want to call ChatGPT for this?
 
 # Installation
+
 Build from source. Here's a bunch of shell commands that should make that pretty easy
 
 ```sh
 git clone "https://github.com/jtpotato/ai-commit" --depth=1
 cd ai-commit
-swift build -c release
 
-# if you don't have a folder to put the CLI in:
-mkdir -p ~/bin
+zsh install.sh
+
+# you may need to add ~/bin to PATH, if this is your first binary.
 echo 'export PATH="$HOME/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
 
