@@ -7,11 +7,11 @@
 
 import Foundation
 
-func getStagedFiles() -> [String] {
+func getGitDiffs() -> String {
     let process = Process()
     process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-    process.arguments = ["git", "diff", "--name-only", "--cached"]
-    
+    process.arguments = ["git", "diff", "--cached"]
+
     let pipe = Pipe()
     process.standardOutput = pipe
     process.standardError = pipe
@@ -21,11 +21,11 @@ func getStagedFiles() -> [String] {
         process.waitUntilExit()
     } catch {
         print("Failed to run git command: \(error)")
-        return []
+        return ""
     }
-    
+
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
     let output = String(data: data, encoding: .utf8) ?? ""
-    
-    return output.split(separator: "\n").map { String($0) }
+
+    return output
 }
