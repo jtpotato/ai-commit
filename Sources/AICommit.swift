@@ -14,16 +14,13 @@ struct AICommit: AsyncParsableCommand {
     let message = await ai.generate(diffs: diffs)
     print("Generated commit message:")
     print(message)
-    print("[y] to approve, any other key to dismiss.")
-    
-    var res = waitForChar(character: "y")
-    if !res { return }
+
+    if !waitForChar(character: "y") { return }
     print("Committing...\n")
     _ = gitCommit(withMessage: message)
     
-    print("Run `git push`? [y] to approve, any other key to dismiss.")
-    res = waitForChar(character: "y")
-    if !res { return }
+    print("Run `git push`?")
+    if !waitForChar(character: "y") { return }
     print("Pushing...\n")
     gitPush()
   }
