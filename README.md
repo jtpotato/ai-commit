@@ -17,6 +17,7 @@ swift build -c release
 # if you don't have a folder to put the CLI in:
 mkdir -p ~/bin
 echo 'export PATH="$HOME/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
 
 # moves the CLI to the folder
 mv ./.build/arm64-apple-macosx/release/ai-commit ~/bin/mycli

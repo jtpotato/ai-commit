@@ -40,3 +40,32 @@ func gitCommit(withMessage message: String) -> Bool {
     return false
   }
 }
+
+func gitPush() {
+  let process = Process()
+  let outputPipe = Pipe()
+  let errorPipe = Pipe()
+
+  process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
+  process.arguments = ["push"]
+  process.standardOutput = outputPipe
+  process.standardError = errorPipe
+
+  do {
+    try process.run()
+
+    // Capture output
+    let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+    let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+
+    let output = String(data: outputData, encoding: .utf8) ?? "No output"
+    let errorOutput = String(data: errorData, encoding: .utf8) ?? "No error output"
+
+    print("Output: \(output)")
+    if !errorOutput.isEmpty {
+      print("Error: \(errorOutput)")
+    }
+  } catch {
+    print("Error running git push: \(error.localizedDescription)")
+  }
+}

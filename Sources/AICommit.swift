@@ -20,5 +20,10 @@ struct AICommit: AsyncParsableCommand {
     if !res { return }
     print("Committing...\n")
     _ = gitCommit(withMessage: message)
+    
+    print("Run `git push`? [y] to approve, any other key to dismiss.")
+    if !waitForChar(character: "y") { return }
+    print("Pushing...\n")
+    gitPush()
   }
 }
