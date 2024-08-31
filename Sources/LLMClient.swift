@@ -36,7 +36,12 @@ struct LLMClient {
     6. Mention affected components or files if relevant.
     7. Never output a blank message.
     8. Provide only the commit message, nothing else.
+    9. Use markdown formatting like backticks for code.
     """
+
+    if diffs.count > 120_000 {
+      print("Diffs may be too long. Model may lose context.")
+    }
 
     let options = OKCompletionOptions(numCtx: 128_000, temperature: 0.5, numPredict: 64)
 
