@@ -8,12 +8,15 @@
    </p>
 </a>
 
-**ai-commit** is a command-line interface (CLI) tool that generates AI-assisted Git commit messages. Written in Swift based on the assumption that most Ollama users are going to have a Mac.
+**ai-commit** is a command-line interface (CLI) tool that generates AI-assisted Git commit messages. Written in Swift based on the assumption that most Ollama users are going to have a Mac. **ai-commit** prioritizes user privacy by running all AI operations locally through Ollama. No data is sent to external servers, ensuring your commit messages and code snippets remain confidential.
 
 ## Features
 
 - Built entirely in Swift for performance and distaste of JavaScript.
 - Utilizes Ollama for generating meaningful commit messages, avoiding the need for external APIs.
+- Runs entirely locally, ensuring your code and commit messages never leave your machine.
+- No internet connection required for generating commit messages.
+- Compatible with air-gapped development environments.
 
 ## Installation
 
@@ -51,6 +54,19 @@ To install **ai-commit**, you'll need to build it from source. Follow the steps 
 
 After installation, you can use `ai-commit` to generate commit messages. There are no arguments, the CLI will guide you through it!
 
+## Privacy
+
+**ai-commit** is designed with privacy as a core principle:
+
+- All AI operations are performed locally using Ollama.
+- No data is sent to external servers or APIs.
+- Your code and commit messages remain on your machine at all times.
+- Suitable for use in secure, air-gapped environments.
+
+By using **ai-commit**, you can benefit from AI-assisted commit messages without compromising the confidentiality of your projects.
+
+As an open-source project, **ai-commit**'s codebase is fully transparent and auditable, allowing users and security experts to verify its privacy claims and security measures.
+
 ## Contributing
 
 Contributions are welcome! Feel free to open an issue or submit a pull request if you have any improvements or new features to add.
@@ -61,10 +77,11 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Acknowledgments
 
-- Ollama
-- OllamaKit
-- Swift Argument Parser
+- Ollama for providing a local AI solution
+- OllamaKit for Swift integration
+- Swift Argument Parser for CLI functionality
+- The open-source community for inspiring privacy-focused design
 
 ---
 
-README mostly generated with ChatGPT.
+README mostly generated with AI.
