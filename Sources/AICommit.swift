@@ -18,14 +18,25 @@ struct AICommit: AsyncParsableCommand {
     }
 
     let diffs = getGitDiffs()
-//    print(diffs)
     print("Diffs collected, waiting for model response")
-//    print(diffs)
-    print("Generated commit message:")
-    let message = await ai.generate(diffs: diffs)
 
-    print("Press `y` to approve, or anything else to exit... ", terminator: "")
-    if !waitForChar(character: "y") { print("Exiting..."); return }
+    var message: String
+    var choice: Character = "r"
+    repeat {
+      print("Generated commit message:")
+      message = await ai.generate(diffs: diffs)
+      // commit message is streamed, so we don't print it again
+
+      print("Press `y` to approve, `r` to regenerate or anything else to exit... ", terminator: "")
+      choice = getChar()
+      if choice == "r" {
+        print("\nRegenerating...\n")
+      } else if choice != "y" {
+        print("\nExiting...")
+        return
+      }
+    } while choice == "r"
+
     print("Committing...\n")
     _ = gitCommit(withMessage: message)
 
