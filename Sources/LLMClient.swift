@@ -43,7 +43,8 @@ struct LLMClient {
       print("Diffs may be too long. Model may lose context.")
     }
 
-    let options = OKCompletionOptions(numCtx: 128_000, temperature: 0.7, numPredict: 64)
+    // my computer can't handle more than this
+    let options = OKCompletionOptions(numCtx: 4_000, temperature: 0.7, numPredict: 64)
 
     var request = OKGenerateRequestData(model: modelName, prompt: diffs)
     request.options = options
