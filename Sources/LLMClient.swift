@@ -55,7 +55,10 @@ struct LLMClient {
                       for try await response in ollama.generate(data: data) {
                           responseString += response.response
                       }
-                      return responseString.trimmingCharacters(in: .whitespaces)
+
+                      let formattedString = responseString.trimmingCharacters(in: .whitespaces)
+                      print("Summary: ", formattedString)
+                      return formattedString
                   } catch {
                       print("Error summarizing chunk: \(error.localizedDescription)")
                       return "Error summarizing chunk"
@@ -102,7 +105,7 @@ struct LLMClient {
       let summaries = await summarizeChunks(chunks)
       let combinedSummary = summaries.joined(separator: "\n")
       let message = await generateFinalCommitMessage(combinedSummary)
-
+      print("Commit message:")
       print(message)
 
       // Now use the LLM to generate a final commit message based on these summaries

@@ -23,7 +23,6 @@ struct AICommit: AsyncParsableCommand {
     var message: String
     var choice: Character = "r"
     repeat {
-      print("Generated commit message:")
       message = await ai.generate(diffs: diffs)
       // commit message is streamed, so we don't print it again
 
