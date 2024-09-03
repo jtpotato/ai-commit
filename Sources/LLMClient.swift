@@ -24,48 +24,88 @@ struct LLMClient {
     }
   }
 
-  func generate(diffs: String) async -> String {
-//    print(diffs.count)
-    let systemPrompt = """
-    You are a Git commit message generator. Your task is to create concise, informative commit messages based on git diffs. Follow these rules:
-    1. Summarize the main changes in 5-10 words.
-    2. Start with one appropriate emoji, in unicode.
-    3. Use present tense (e.g., "Add", not "Added").
-    4. Be specific but concise.
-    5. Focus on the "what" and "why", not the "how".
-    6. Mention affected components or files if relevant.
-    7. Never output a blank message.
-    8. Provide only the commit message, nothing else.
-    9. Use markdown formatting like backticks for code.
-    """
+  func chunkDiff(_ diff: String, maxChunkSize: Int = 10000) -> [String] {
+      var chunks: [String] = []
+      let lines = diff.split(separator: "\n")
+      var currentChunk = ""
 
-    if diffs.count > 120_000 {
-      print("Diffs may be too long. Model may lose context.")
-    }
-
-    // my computer can't handle more than this
-    let options = OKCompletionOptions(numCtx: 8_000, temperature: 0.7, numPredict: 64)
-
-    let messages: [OKChatRequestData.Message] = [
-        OKChatRequestData.Message(role: .system, content: systemPrompt),
-        OKChatRequestData.Message(role: .user, content: diffs)
-    ]
-
-    var request = OKChatRequestData(model: modelName, messages: messages)
-    request.options = options
-
-    var responseString = ""
-    do {
-      for try await response in ollama.chat(data: request) {
-        print(response.message?.content ?? "", terminator: "")
-        responseString += response.message?.content ?? ""
+      for line in lines {
+          if currentChunk.count + line.count > maxChunkSize {
+              chunks.append(currentChunk)
+              currentChunk = ""
+          }
+          currentChunk += line + "\n"
       }
-    } catch {
-      print("\(error.localizedDescription)")
-    }
 
-    print("")
+      if !currentChunk.isEmpty {
+          chunks.append(currentChunk)
+      }
 
-    return responseString
+      return chunks
+  }
+
+  func summarizeChunks(_ chunks: [String]) async -> [String] {
+      await withTaskGroup(of: String.self) { group in
+          for chunk in chunks {
+              group.addTask {
+                  do {
+                      let prompt = "Summarize the following code changes into one sentence:\n\(chunk)"
+                      let data = OKGenerateRequestData(model: modelName, prompt: prompt)
+                      var responseString = ""
+                      for try await response in ollama.generate(data: data) {
+                          responseString += response.response
+                      }
+                      return responseString.trimmingCharacters(in: .whitespaces)
+                  } catch {
+                      print("Error summarizing chunk: \(error.localizedDescription)")
+                      return "Error summarizing chunk"
+                  }
+              }
+          }
+
+          var summaries: [String] = []
+          for await summary in group {
+              summaries.append(summary)
+          }
+          return summaries
+      }
+  }
+
+  func generateFinalCommitMessage(_ summary: String) async -> String {
+      // Use the LLM to create the final commit message based on the combined summaries
+      do {
+          let prompt = """
+          Based on the following summary of code changes, generate a concise and informative commit message.
+          Remember:
+          Commit messages must start with an emoji.
+          Commit messages must be less than 72 characters.
+
+          Changes made:
+          \(summary)
+          """
+          let data = OKGenerateRequestData(model: modelName, prompt: prompt)
+          var commitMessage = ""
+          for try await response in ollama.generate(data: data) {
+              commitMessage += response.response
+          }
+          return commitMessage.trimmingCharacters(in: .whitespacesAndNewlines)
+      } catch {
+          print("Error generating final commit message: \(error.localizedDescription)")
+          return "Error generating commit message"
+      }
+  }
+
+  func generate(diffs: String) async -> String {
+      print("Chunking changes...")
+      let chunks = chunkDiff(diffs, maxChunkSize: 32000)
+      print("Summarizing chunks...")
+      let summaries = await summarizeChunks(chunks)
+      let combinedSummary = summaries.joined(separator: "\n")
+      let message = await generateFinalCommitMessage(combinedSummary)
+
+      print(message)
+
+      // Now use the LLM to generate a final commit message based on these summaries
+      return message
   }
 }
