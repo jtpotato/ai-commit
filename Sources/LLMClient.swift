@@ -44,17 +44,21 @@ struct LLMClient {
     }
 
     // my computer can't handle more than this
-    let options = OKCompletionOptions(numCtx: 4_000, temperature: 0.7, numPredict: 64)
+    let options = OKCompletionOptions(numCtx: 8_000, temperature: 0.7, numPredict: 64)
 
-    var request = OKGenerateRequestData(model: modelName, prompt: diffs)
+    let messages: [OKChatRequestData.Message] = [
+        OKChatRequestData.Message(role: .system, content: systemPrompt),
+        OKChatRequestData.Message(role: .user, content: diffs)
+    ]
+
+    var request = OKChatRequestData(model: modelName, messages: messages)
     request.options = options
-    request.system = systemPrompt
 
     var responseString = ""
     do {
-      for try await response in ollama.generate(data: request) {
-        print(response.response, terminator: "")
-        responseString += response.response
+      for try await response in ollama.chat(data: request) {
+        print(response.message?.content ?? "", terminator: "")
+        responseString += response.message?.content ?? ""
       }
     } catch {
       print("\(error.localizedDescription)")
