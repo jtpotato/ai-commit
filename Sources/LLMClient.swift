@@ -105,7 +105,7 @@ struct LLMClient {
       let summaries = await summarizeChunks(chunks)
       let combinedSummary = summaries.joined(separator: "\n")
       let message = await generateFinalCommitMessage(combinedSummary)
-      print("Commit message:")
+      print("\nCommit message:")
       print(message)
 
       // Now use the LLM to generate a final commit message based on these summaries
